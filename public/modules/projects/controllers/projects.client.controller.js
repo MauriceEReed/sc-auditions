@@ -185,28 +185,39 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
   	};
   	$scope.selCheck = function(filename){
-			for(var i = 0; i < $scope.selectedAuditions.length; ++i){
-  			if($scope.selectedAuditions[i] === filename){
+
+			var scAuds = $scope.selectedAuditions,
+					max = scAuds.length,
+					i = 0;
+
+			for(i; i < max; ++i){
+  			if(scAuds[i] === filename){
   				return true;
   			}
   		}
   	};
 
   	$scope.hideAudition = function(filename){
+			var auds = $scope.project.auditions,
+					max = auds.length,
+					i = 0;
       		// $scope.hideList.push(filename);
       		// get audition id
-      		for(var i = 0; i < $scope.project.auditions.length; ++i){
-      			if($scope.project.auditions[i].file.path === filename){
-      				$scope.project.auditions[i].hidden = true;
+      		for(i; i < max; ++i){
+      			if(auds[i].file.path === filename){
+      				auds[i].hidden = true;
       				$scope.updateNoRefresh();
       			}
       		}
   	};
 
   	$scope.isHidden = function(filename){
+			var auds = $scope.project.auditions,
+					max = auds.length,
+					i = 0;
 
-  		for(var i = 0; i < $scope.project.auditions.length; ++i){
-  			if($scope.project.auditions[i].file.path === filename){
+  		for(i; i < max; ++i){
+  			if(auds[i].file.path === filename){
   				return true;
   			}
   		}
@@ -273,9 +284,13 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
   	// show part field if talent value is not already checked
   	$scope.showPartFld = function(id){
-  		if(typeof $scope.project.talent !== 'undefined'){
-    		for(var i = 0; i < $scope.project.talent.length; ++i){
-    			if($scope.project.talent[i].talentId === String(id) && ($scope.project.talent[i].requested === true || $scope.project.talent[i].regular === true)){
+			var tal = $scope.project.talent,
+					max = tal.length,
+					i = 0;
+
+  		if(typeof tal !== 'undefined'){
+    		for(i; i < max; ++i){
+    			if(tal[i].talentId === String(id) && (tal[i].requested === true || tal[i].regular === true)){
   					return false;
     			}
     		}
@@ -283,30 +298,43 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
  			return true;
    	};
    	$scope.showPartString = function(id){
-			if(typeof $scope.project.talent !== 'undefined'){
-    		for(var i = 0; i < $scope.project.talent.length; ++i){
-    			if($scope.project.talent[i].talentId === String(id) && typeof $scope.project.talent[i].part !== 'undefined' && $scope.project.talent[i].part !== ''){
-  					return $scope.project.talent[i].part;
+			var tal = $scope.project.talent,
+					max = tal.length,
+					i = 0;
+
+			if(typeof tal !== 'undefined'){
+    		for(i; i < max; ++i){
+    			if(tal[i].talentId === String(id) && typeof tal[i].part !== 'undefined' && tal[i].part !== ''){
+  					return tal[i].part;
     			}
     		}
 			}
   	};
    	$scope.showCreatePartFld = function(id){
-			if(typeof $scope.newProject.talent !== 'undefined'){
-	  		for(var i = 0; i < $scope.newProject.talent.length; ++i){
-	  			if($scope.newProject.talent[i].talentId === String(id) && ($scope.newProject.talent[i].requested === true || $scope.newProject.talent[i].regular === true)){
-						return false;
-	  			}
-	  		}
+			if(typeof $scope.newProject !== 'undefined' && typeof $scope.newProject.talent !== 'undefined'){
+				var tal = $scope.newProject.talent,
+						max = tal.length,
+						i = 0;
+
+		  		for(i; i < max; ++i){
+		  			if(tal[i].talentId === String(id) && (tal[i].requested === true || tal[i].regular === true)){
+							return false;
+		  			}
+		  		}
 			}
  			return true;
    	};
    	$scope.defaults = function(){
-   		var allowRoles = ['producer/auditions director'];
+   		var authRoles = Authentication.user.roles,
+					maxAuth = authRoles.length,
+					allowRoles = ['producer/auditions director'],
+					maxAllow = allowRoles.length,
+					i = 0,
+					j = 0;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			for(i; i < maxAuth; ++i){
+				for(j; j < maxAllow; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						$scope.searchText.status = 'In Progress';
 					}
 				}
@@ -321,87 +349,128 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			}
 		};
 		$scope.permitAdmin = function(){
-			var allowRoles = ['admin'];
+			var allowRoles = ['admin'],
+					maxAllowRoles = allowRoles.length,
+					authRoles = Authentication.user.roles,
+					maxAuthRoles = authRoles.length,
+					i = 0,
+					j = 0;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			for(i; i < maxAuthRoles; ++i){
+				for(j; j < maxAllowRoles; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						return true;
 					}
 				}
 			}
 		};
 		$scope.permitAdminProductionCoordinator = function(){
-			var allowRoles = ['admin','production coordinator'];
+			var allowRoles = ['admin','production coordinator'],
+					maxAllowRoles = allowRoles.length,
+					authRoles = Authentication.user.roles,
+					maxAuthRoles = authRoles.length,
+					i = 0,
+					j = 0;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			for(i; i < maxAuthRoles; ++i){
+				for(j; j < maxAllowRoles; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						return true;
 					}
 				}
 			}
 		};
 		$scope.permitAdminProductionCoordinatorDirector = function(){
-			var allowRoles = ['admin', 'producer/auditions director', 'production coordinator'];
+			var allowRoles = ['admin', 'producer/auditions director', 'production coordinator'],
+					maxAllowRoles = allowRoles.length,
+					authRoles = Authentication.user.roles,
+					maxAuthRoles = authRoles.length,
+					i = 0,
+					j = 0;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+
+			for(i; i < maxAuthRoles; ++i){
+				for(j; j < maxAllowRoles; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						return true;
 					}
 				}
 			}
 		};
 		$scope.permitAdminDirector = function(){
-			var allowRoles = ['admin', 'producer/auditions director'];
+			var allowRoles = ['admin', 'producer/auditions director'],
+					maxAllowRoles = allowRoles.length,
+					authRoles = Authentication.user.roles,
+					maxAuthRoles = authRoles.length,
+					i = 0,
+					j = 0;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			for(i; i < maxAuthRoles; ++i){
+				for(j; j < maxAuthRoles; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						return true;
 					}
 				}
 			}
 		};
 		$scope.permitProducers = function(){
-			var allowRoles = ['producer/auditions director'];
+			var allowRoles = ['producer/auditions director'],
+					maxAllowRoles = allowRoles.length,
+					authRoles = Authentication.user.roles,
+					maxAuthRoles = authRoles.length,
+					i = 0,
+					j = 0;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			for(i; i < maxAuthRoles; ++i){
+				for(j; j < maxAllowRoles; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						return true;
 					}
 				}
 			}
 		};
 		$scope.permitAdminTalentDirectorProdCoord = function(){
-			var allowRoles = ['admin', 'talent director', 'production coordinator'];
+			var allowRoles = ['admin', 'talent director', 'production coordinator'],
+			maxAllowRoles = allowRoles.length,
+			authRoles = Authentication.user.roles,
+			maxAuthRoles = authRoles.length,
+			i = 0,
+			j = 0;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			for(i; i < maxAuthRoles; ++i){
+				for(j; j < maxAllowRoles; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						return true;
 					}
 				}
 			}
 		};
 		$scope.permitEveryOneButClients = function(){
-			var allowRoles = ['admin', 'producer/auditions director', 'production coordinator', 'talent director'];
+			var allowRoles = ['admin', 'producer/auditions director', 'production coordinator', 'talent director'],
+			maxAllowRoles = allowRoles.length,
+			authRoles = Authentication.user.roles,
+			maxAuthRoles = authRoles.length,
+			i = 0,
+			j = 0;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
-					if(Authentication.user.roles[i] === allowRoles[j]) {
+			for(i; i < maxAuthRoles; ++i){
+				for(j; j < maxAllowRoles; ++j){
+					if(authRoles[i] === allowRoles[j]) {
 						return true;
 					}
 				}
 			}
 		};
 		$scope.permitClient = function(){
-			var allowRoles = ['client'];
+			var allowRoles = ['client'],
+			maxAllowRoles = allowRoles.length,
+			authRoles = Authentication.user.roles,
+			maxAuthRoles = authRoles.length,
+			i = 0,
+			j = 0;
 
-			for(var i = 0; i < Authentication.user.roles.length; ++i){
-				for(var j = 0; j < allowRoles.length; ++j){
+			for(var i = 0; i < maxAuthRoles; ++i){
+				for(var j = 0; j < maxAllowRoles; ++j){
 					if(Authentication.user.roles[i] === allowRoles[j]) {
 						return true;
 					}
@@ -1180,28 +1249,37 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 			redirect = typeof redirect === 'undefined' ? true : redirect;
 
 			// console.log($scope.rate[key]);
-			var key, ratingCnt = 0, avgRating = 0;
+			var key, ratingCnt = 0,
+					avgRating = 0,
+
+					//added post-optimization
+					auds = $scope.project.auditions,
+					maxAuds = auds.length,
+					audsRating = $scope.project.auditions[key].rating,
+					maxAudsRating = audsRating.length
+					j = 0
+					i = 0;
 
 			// get key for selected audition
-			for(var j = 0; j < $scope.project.auditions.length; ++j){
-				if($scope.project.auditions[j].file.path === path){
+			for(j; j < maxAuds; ++j){
+				if(auds[j].file.path === path){
 					key = j;
 				}
 			}
 
 			// walk through existing ratings
 			if(typeof $scope.project.auditions[key] !== 'undefined' && typeof $scope.project.auditions[key].rating !== 'undefined'){
-				for(var i = 0; i < $scope.project.auditions[key].rating.length; ++i){
+				for(i; i < maxAudsRating; ++i){
 					// toggle existing rating if found
 					if($scope.project.auditions[key].rating[i].userId === Authentication.user._id){
 						$scope.project.auditions[key].rating.splice(i,1);
 						$scope.project.auditions[key].curRating = $scope.selCheckVal;
 					} else {
 						// gather average rating
-						avgRating += $scope.project.auditions[key].rating[i].value;
+						avgRating += audsRating[i].value;
 					}
 				}
-				ratingCnt += $scope.project.auditions[key].rating.length;
+				ratingCnt += maxAudsRating;
 			}
 
 			avgRating += $scope.selCheckVal;
@@ -1291,6 +1369,10 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 				}
 			}
 
+			var client = $scope.project.client,
+					maxClient = client.length,
+					i = 0;
+
 	    if($scope.project.phases[key].status === 'complete'){
 	    	var now = new Date();
 	    	$scope.project.phases[key].endDate = now.toJSON();
@@ -1300,7 +1382,7 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 					$scope.project.status = 'Closed - Pending Client Decision';
 
 					// send closing email
-					for(var i = 0; i < $scope.project.client.length; ++i){
+					for(i; i < maxClient; ++i){
 						$scope.selectedMainClients[i] = $scope.project.client[i].userId;
 					}
 					$scope.sendClientEmail('closing');
@@ -1557,12 +1639,14 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 		}
 
 		$scope.calcProjectProg = function(curProject){
+			var i = 0;
+
 			if(typeof curProject.phases !== 'undefined'){
 				var phaseLngth = curProject.phases.length;
 				var complSteps = 0;
 
 				// determine completed steps
-				for(var i = 0; i < phaseLngth; ++i){
+				for(i; i < phaseLngth; ++i){
 					if(curProject.phases[i].status === 'complete'){
 						complSteps++;
 					}
@@ -1618,9 +1702,11 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 
 		// check all files assigned to project
 		$scope.checkAllFiles = function(){
+			var maxAuds = $scope.project.auditions.length,
+					i = 0;
 
 			// reset file check status for all files
-			for(var i = 0; i < $scope.project.auditions.length; ++i){
+			for(i; i < maxAuds; ++i){
 				$scope.project.auditions[i].filecheck = 0;
 
 				// init file check walk on reset finish
