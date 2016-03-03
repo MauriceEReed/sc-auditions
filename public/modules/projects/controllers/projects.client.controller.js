@@ -1750,11 +1750,12 @@ angular.module('projects').controller('ProjectsController', ['$scope', '$statePa
 						$scope.watchersObj.project.phases = $scope.$watchCollection('project.phases', function(val){
 
 							if(typeof $scope.project.phases !== 'undefined'){
-								var phaseLngth = $scope.project.phases.length;
-								var complSteps = 0;
+								var phaseLngth = $scope.project.phases.length,
+								complSteps = 0,
+								i = 0;
 
 								// determine completed steps
-								for(var i = 0; i < phaseLngth; ++i){
+								for(i; i < phaseLngth; ++i){
 									if($scope.project.phases[i].status === 'complete'){
 										complSteps++;
 									}
